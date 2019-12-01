@@ -3,11 +3,19 @@ import requests
 import pandas as pd
 import re
 import logging
-from os import getcwd
+import sys
 from define import config
 
+sys.path.append(".")
+
+logging.basicConfig(format = '%(asctime)s %(message)s',
+                    datefmt = '%m/%d/%Y %H:%M:%S',
+                    filename = 'notifier.log',
+                    level=logging.INFO)
+
+logging.info('Launch')
+
 def getLastEntries(url, deltaMinutes):
-    return
     NewsFeed = feedparser.parse(url)
     logging.info('RSS: ' + str(len(NewsFeed.entries)) + 'entries found.')
 
@@ -22,3 +30,18 @@ def getLastEntries(url, deltaMinutes):
 
     print(len(lastEntries), 'published during the last {} min.'.format(deltaMinutes))
     return lastEntries
+
+def getSection(url, domain):
+    match = re.match(r'.*{domain}\/(.*?)\/.*'.format(domain=domain), url)
+    if match:
+        return match.group(1)
+    else:
+        logging.warning('No section found in url'+ url)
+        return 'n/a'
+        
+def getLegacyId(shortLink):
+    untrustedId = shortLink.split('/')[-1]
+    if re.match(r"\d*$", untrustedId):
+        return untrustedId
+    else:
+        return False

@@ -1,8 +1,23 @@
-from notifier import getLastEntries
+from notifier import getLastEntries, getSection, getLegacyId
 import pandas as pd
+import os.path
 
 def test_getLastEntries():
-    # doit retourner un DataFrame
+    # getLastEntries() doit retourner un DataFrame
     test_df = getLastEntries('https://paulronga.ch/feed/', 60*24*365*2)
     assert type(test_df) == pd.core.frame.DataFrame
     assert len(test_df) > 0
+    
+def test_logFile():
+    # le fichier notifier.log doit etre cree
+    assert os.path.isfile('notifier.log')
+    
+def test_getSection():
+    # doit retourner une rubrique / un tag ou n/a
+    assert getSection('https://www.domain.biz/asdf/rognogno', 'domain.biz') == 'asdf'
+    assert getSection('https://www.external.net/boom', 'domain.biz') == 'n/a'
+    
+def test_getLegacyId():
+    # doit retourner une serie de chiffres
+    assert getLegacyId('https://www.domain.biz/asdf/2154321321654') == '2154321321654'
+    assert getLegacyId('https://www.domain.biz/asdf/rheuu') == False
