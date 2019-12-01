@@ -57,5 +57,19 @@ def getJSON(article_id):
         return response.json()
     else:
         return False
-        
-getJSON('20398201938')
+
+def isPremium(JSONdata):
+    lookup = JSONdata
+    
+    # TODO: optimize
+    i = 0
+    for level in config['premium-path']:
+        try:
+            lookup = lookup[level]
+        except ValueError as e:
+            logging.warning('Premium: broken JSON path')
+            return False
+    return lookup
+    
+def filterLastEntries(df_entries, filters):
+    return df_entries

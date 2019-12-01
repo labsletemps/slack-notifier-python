@@ -1,10 +1,12 @@
-from notifier import getLastEntries, getSection, getArticleId, getJSON
+from notifier import getLastEntries, getSection, getArticleId, getJSON, isPremium, filterLastEntries
 import pandas as pd
 import os.path
+import json
 
 def test_getLastEntries():
     # getLastEntries() doit retourner un DataFrame
     test_df = getLastEntries('https://paulronga.ch/feed/', 60*24*365*2)
+    test_df.to_csv('mockup/articles.csv', index=False)
     assert type(test_df) == pd.core.frame.DataFrame
     assert len(test_df) > 0
     
@@ -25,4 +27,22 @@ def test_getArticleId():
 def test_getJSON():
     # doit retourner du JSON ou "FAUX"
     assert getJSON('asdf') == False
-    #assert type(getJSON('asdf')) == 
+    # TODO more testing here
+    # assert type(getJSON('asdf')) == 
+    
+def test_isPremium():
+    # doit retourner TRUE ou FALSE, avec warning si info pas trouvee
+    with open('mockup/article.json', 'r') as f:
+        JSONdata = json.load(f)
+        assert isPremium(JSONdata) == True
+        # TODO: another mockup article
+        assert type(isPremium(JSONdata)) == bool
+
+def test_filterLastEntries():
+    # doit retourner un DataFrame respectant les criteres
+    df = pd.read_csv('mockup/articles.csv')
+    filters = {
+        'or': {'section': 'geneve'},
+        'or': {'premium': 'premium'}
+    }
+    assert type( filterLastEntries(df, filters) ) == pd.core.frame.DataFrame
