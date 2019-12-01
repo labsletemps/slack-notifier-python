@@ -1,0 +1,3 @@
+RSS-FEED='your-RSS-feed'
+API-ENDPOINT='your-api-endpoint'
+SLACK-WEBHOOK='your-slack-webhook-url'
