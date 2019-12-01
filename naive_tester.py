@@ -1,4 +1,4 @@
-from notifier import getLastEntries, getSection, getLegacyId
+from notifier import getLastEntries, getSection, getArticleId, getJSON
 import pandas as pd
 import os.path
 
@@ -17,7 +17,12 @@ def test_getSection():
     assert getSection('https://www.domain.biz/asdf/rognogno', 'domain.biz') == 'asdf'
     assert getSection('https://www.external.net/boom', 'domain.biz') == 'n/a'
     
-def test_getLegacyId():
-    # doit retourner une serie de chiffres
-    assert getLegacyId('https://www.domain.biz/asdf/2154321321654') == '2154321321654'
-    assert getLegacyId('https://www.domain.biz/asdf/rheuu') == False
+def test_getArticleId():
+    # doit retourner une serie de chiffres (en str)
+    assert getArticleId('https://www.domain.biz/asdf/2154321321654') == '2154321321654'
+    assert getArticleId('https://www.domain.biz/asdf/rheuu') == False
+    
+def test_getJSON():
+    # doit retourner du JSON ou "FAUX"
+    assert getJSON('asdf') == False
+    #assert type(getJSON('asdf')) == 

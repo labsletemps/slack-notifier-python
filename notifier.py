@@ -39,9 +39,23 @@ def getSection(url, domain):
         logging.warning('No section found in url'+ url)
         return 'n/a'
         
-def getLegacyId(shortLink):
+def getArticleId(shortLink):
     untrustedId = shortLink.split('/')[-1]
     if re.match(r"\d*$", untrustedId):
         return untrustedId
     else:
         return False
+        
+def getJSON(article_id):
+    response = False
+    try:
+        response = requests.get(config['API-endpoint'] + str(article_id), headers=config['request-headers'])
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e: # on catch tout
+        print (e)
+    if response:
+        return response.json()
+    else:
+        return False
+        
+getJSON('20398201938')
